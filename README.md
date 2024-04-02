@@ -3,7 +3,8 @@ Rory Stevens, John McDaniel, Tim Mucha, Alan Velasquez, Ogaga Obrimaho_
 
 # Sighting Tracker
 
-## Sprint 1
+## Sprint 1: 
+See `DetailedUseCases.pdf` for more details
 
 ### Two Use Cases Specified
 * New Sighting Screen
