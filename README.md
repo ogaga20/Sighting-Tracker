@@ -1,9 +1,13 @@
-#Sighting Tracker
+CMSC 355 Project
+Rory Stevens, John McDaniel, Tim Mucha, Alan Velasquez, Ogaga Obrimaho
 
-##Sprint 1
+# Sighting Tracker
 
-###Two Use Cases Specified
+## Sprint 1
 
-###Use Cases Implemented
+### Two Use Cases Specified
 
-###Test Cases Planned
+### Use Cases Implemented
+
+### Test Cases Planned
+
