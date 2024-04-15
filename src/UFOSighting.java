@@ -3,14 +3,16 @@ public class UFOSighting {
         Time time;
         Location location;
         String description;
+        boolean isCorroborated;
 
         //4 strings, date in xx/xx/xxxx, Time in xx:xx, Location in "Latitude Longitude State City"
-        public UFOSighting(String date, String time, String location, String description) {
+        public UFOSighting(String date, String time, String location, String description, boolean isCorroborated) {
             this.date = new Date(date);
             this.time = new Time(time);
             String[] temp = location.split(" ");
             this.location = new Location(temp[0], temp[1], temp[2], temp[3]);
             this.description = description;
+            this.isCorroborated = isCorroborated;
         }
 
         public UFOSighting(Date date, Time time, Location location, String description){
@@ -57,6 +59,14 @@ public class UFOSighting {
 
         public void setDescription(String description) {
             this.description = description;
+        }
+
+        public boolean isCorroborated(){
+            return isCorroborated;
+        }
+
+        public void corroborate(){
+            isCorroborated = true;
         }
 
         @Override

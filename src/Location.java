@@ -52,11 +52,19 @@ import java.text.NumberFormat;
             this.city = city;
         }
 
+        public double getDoubleLong(){
+            return longitude;
+        }
+
         //Returns a String of Longitude
         public String getLongitude() {
             NumberFormat formatter = new DecimalFormat("##0.######");
             String lon = formatter.format(longitude);
             return lon;
+        }
+
+        public double getDoubleLat(){
+            return latitude;
         }
 
         //Returns a String of Latitude
@@ -75,5 +83,27 @@ import java.text.NumberFormat;
             String lon = formatter.format(longitude);
 
             return lat + " " + lon + " " + state + " " + city;
+        }
+
+        public double compareLatitude(double lat) {
+
+            if(this.latitude == lat)
+            {
+                return 0;
+            }
+
+            double result = this.latitude - lat;
+            return result;
+        }
+
+        public double compareLongitude(double lon){
+
+            if(this.longitude == lon)
+            {
+                return 0;
+            }
+
+            double result = this.longitude - lon;
+            return result;
         }
     }

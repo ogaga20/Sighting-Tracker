@@ -23,6 +23,7 @@ public class RecordContainer {
             out.writeUTF(recordContainer.get(i).getTime().toString());
             out.writeUTF(recordContainer.get(i).getLocation().toString());
             out.writeUTF(recordContainer.get(i).getDescription());
+            out.writeBoolean(recordContainer.get(i).isCorroborated());
         }
         out.close();
     }
@@ -42,6 +43,7 @@ public class RecordContainer {
             String time;
             String location;
             String description;
+            boolean isCorroborated;
 
 
             try {
@@ -50,7 +52,8 @@ public class RecordContainer {
                     time = in.readUTF();
                     location = in.readUTF();
                     description = in.readUTF();
-                    UFOSighting sighting = new UFOSighting(date, time, location, description);
+                    isCorroborated = in.readBoolean();
+                    UFOSighting sighting = new UFOSighting(date, time, location, description, isCorroborated);
                     recordContainer.add(sighting);
                 }
             } catch (EOFException e) {

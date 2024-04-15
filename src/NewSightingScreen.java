@@ -29,7 +29,17 @@ public class NewSightingScreen extends JPanel {
     private JButton submitButton;
     private JButton returnButton;
 
+    private boolean isDateGood;
+    private boolean isTimeGood;
+    private boolean isLatGood;
+    private boolean isLonGood;
+
     public NewSightingScreen(ApplicationFrame f, RecordContainer rc){
+        isDateGood = false;
+        isTimeGood = false;
+        isLatGood = false;
+        isLonGood = false;
+
         frame = f;
         recordContainer = rc;
         this.setLayout(new FlowLayout());
@@ -37,7 +47,8 @@ public class NewSightingScreen extends JPanel {
 
 
         screenTitle = new JLabel("Report a New Sighting", SwingConstants.CENTER);
-            screenTitle.setPreferredSize(new Dimension(800, 45));
+            screenTitle.setPreferredSize(new Dimension(800, 30));
+            screenTitle.setFont(getFont().deriveFont(24.0F));
 
         dateLabel = new JLabel ("Date (xx/xx/xxxx): ");
             dateLabel.setPreferredSize(new Dimension(400, 45));
@@ -63,52 +74,56 @@ public class NewSightingScreen extends JPanel {
         descriptionArea = new JTextArea(10, 20);
 
         submitButton = new JButton("Submit");
-            submitButton.setPreferredSize(new Dimension(800, 45));
+            submitButton.setPreferredSize(new Dimension(400, 45));
+            submitButton.setBackground(Color.GREEN);
+            submitButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
             submitButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String dateFieldText = dateField.getText();
                     String timeFieldText = timeField.getText();
-                    String cityFieldText = cityField.getText();
-                    String stateFieldText = stateField.getText();
                     String latFieldText = latField.getText();
                     String lonFieldText = lonField.getText();
-                    String descriptionAreaText = descriptionArea.getText();
 
-                    //to get in the format the UFOSighting constructor expects
-                    String locationText = latFieldText + " " + lonFieldText + " " + stateFieldText + " " + cityFieldText;
+                    if (confirmSubmission(dateFieldText, timeFieldText, latFieldText, lonFieldText)) {
+                        String cityFieldText = cityField.getText();
+                        String stateFieldText = stateField.getText();
+                        String descriptionAreaText = descriptionArea.getText();
 
-                    UFOSighting sighting = new UFOSighting(dateFieldText, timeFieldText, locationText, descriptionAreaText);
-                    recordContainer.addRecord(sighting);
+                        //to get in the format the UFOSighting constructor expects
+                        String locationText = latFieldText + " " + lonFieldText + " " + stateFieldText + " " + cityFieldText;
 
-                    try {
-                        recordContainer.saveRecords();
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
+                        boolean isCorroborated = false;
+                        UFOSighting sighting = new UFOSighting(dateFieldText, timeFieldText, locationText, descriptionAreaText, isCorroborated);
+                        recordContainer.addRecord(sighting);
+
+                        try {
+                            recordContainer.saveRecords();
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
+
+                        try {
+                            recordContainer.getRecordContainer().clear();
+                            recordContainer.loadRecords();
+                        } catch (FileNotFoundException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
+
+                        dateField.setText("");
+                        timeField.setText("");
+                        cityField.setText("");
+                        stateField.setText("");
+                        latField.setText("");
+                        lonField.setText("");
+                        descriptionArea.setText("");
                     }
-
-                    try {
-                        recordContainer.getRecordContainer().clear();
-                        recordContainer.loadRecords();
-                    } catch (FileNotFoundException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-
-                    frame.getSearchScreen().update(recordContainer.getRecordContainer().size());
-
-                    dateField.setText("");
-                    timeField.setText("");
-                    cityField.setText("");
-                    stateField.setText("");
-                    latField.setText("");
-                    lonField.setText("");
-                    descriptionArea.setText("");
                 }
             });
 
-        returnButton = new JButton("Return to Main Menu");
+            returnButton = new JButton("Return to Main Menu");
             returnButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -140,5 +155,110 @@ public class NewSightingScreen extends JPanel {
         this.add(returnButton);
 
 
+
+    }
+
+    /*private void resetFieldCheck() {
+        isDateGood = false;
+        isTimeGood = false;
+        isLatGood = false;
+        isLonGood = false;
+    }*/
+
+    private boolean checkDate(String date) {
+        boolean answer = true;
+
+        char c[] = new char[date.length()];
+        if (date.length() != 10) {
+            answer = false;
+        } else {
+            for (int i = 0; i < date.length(); i++) {
+                c[i] = date.charAt(i);
+            }
+            if (!Character.isDigit(c[0]) || !Character.isDigit(c[1]) ||
+                    !Character.isDigit(c[3]) || !Character.isDigit(c[4]) ||
+                    !Character.isDigit(c[6]) || !Character.isDigit(c[7]) ||
+                    !Character.isDigit(c[8]) || !Character.isDigit(c[9])) {
+                answer = false;
+            }
+
+            if (c[2] != '/' || c[5] != '/') {
+                answer = false;
+            }
+        }
+        return answer;
+    }
+
+    private boolean checkTime(String time) {
+        boolean answer = true;
+
+        char c[] = new char[time.length()];
+        if (time.length() != 5) {
+            answer = false;
+        } else {
+            for (int i = 0; i < time.length(); i++) {
+                c[i] = time.charAt(i);
+            }
+            if (!Character.isDigit(c[0]) || !Character.isDigit(c[1]) ||
+                    !Character.isDigit(c[3]) || !Character.isDigit(c[4])) {
+                answer = false;
+            }
+
+            if (c[2] != ':') {
+                answer = false;
+            }
+        }
+        return answer;
+    }
+
+    private boolean checkCoord(String coord){
+        boolean answer = true;
+
+        char c[] = new char[coord.length()];
+        if (coord.length() != 8) {
+            answer = false;
+        } else {
+            for (int i = 0; i < coord.length(); i++) {
+                c[i] = coord.charAt(i);
+            }
+            if (!Character.isDigit(c[0]) || !Character.isDigit(c[1]) ||
+                    !Character.isDigit(c[3]) || !Character.isDigit(c[4]) ||
+                    !Character.isDigit(c[5]) || !Character.isDigit(c[6]) ||
+                    !Character.isDigit(c[7])) {
+                answer = false;
+            }
+
+            if (c[2] != '.') {
+                answer = false;
+            }
+        }
+        return answer;
+    }
+
+    private boolean confirmSubmission(String date, String time, String lat, String lon){
+        boolean answer = true;
+
+        isDateGood = checkDate(date);
+        isTimeGood = checkTime(time);
+        isLatGood = checkCoord(lat);
+        isLonGood = checkCoord(lon);
+
+        if (!isDateGood){
+            this.dateField.setText("CHECK FORMAT");
+            answer = false;
+        }
+        if (!isTimeGood){
+            this.timeField.setText("CHECK FORMAT");
+            answer = false;
+        }
+        if (!isLatGood){
+            this.latField.setText("CHECK FORMAT");
+            answer = false;
+        }
+        if (!isLonGood){
+            this.lonField.setText("CHECK FORMAT");
+            answer = false;
+        }
+        return answer;
     }
 }

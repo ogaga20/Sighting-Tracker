@@ -5,6 +5,7 @@ import java.io.IOException;
 public class ApplicationFrame extends JFrame {
     private MainMenuScreen mainMenuScreen;
     private NewSightingScreen newSightingScreen;
+    private BrowseScreen browseScreen;
     private SearchScreen searchScreen;
     private RecordContainer recordContainer;
 
@@ -14,11 +15,13 @@ public class ApplicationFrame extends JFrame {
         recordContainer = new RecordContainer();
         recordContainer.loadRecords();
         newSightingScreen = new NewSightingScreen(this, recordContainer);
-        searchScreen = new SearchScreen(this, recordContainer);
-        mainMenuScreen = new MainMenuScreen(this, newSightingScreen, searchScreen, recordContainer);
+        browseScreen = new BrowseScreen(this);
+        searchScreen = new SearchScreen(this, recordContainer, browseScreen);
+        mainMenuScreen = new MainMenuScreen(this, newSightingScreen, browseScreen, searchScreen, recordContainer);
 
 
         this.setTitle("Sighting Tracker");
+        this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(mainMenuScreen);
         this.pack();
@@ -29,6 +32,6 @@ public class ApplicationFrame extends JFrame {
     public MainMenuScreen getMainMenuScreen(){
         return mainMenuScreen;
     }
-    public SearchScreen getSearchScreen() {return searchScreen;}
+    public BrowseScreen getBrowseScreen() {return browseScreen;}
 
 }
