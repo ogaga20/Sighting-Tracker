@@ -41,3 +41,19 @@ See `DetailedUseCases.pdf` for more details
 ### Test Cases
 #1: User can successfully search for a sighting based on a date range. \
 #2: User can successfully corroborate a sighting from the "Browse Sightings" screen
+
+## Sprint 3:
+### New Use Case
+* __Use Case/Functionality 1:__ Map - Users can view a map screen with data representing sightings on the map from the longitude and lattitude attributes of the sighting.
+  * **Actor:** User
+  * **Entry condition:** The User selects "Browse sightings"
+  * **Basic path:** \
+     #1. While on the browse sightings screen, the user selects the plot button \
+     #2. The user can view the sightings on the map  \
+     #3. The user can return to the main menu and subsequent screens.
+  * **Business Rules:**
+    * **[BR01]** Only valid coordinates can be used for display on the map screen.
+  
+### Test Cases
+#1: User can successfully press the plot button from the browse sightings screen and is taken to the map screen \
+#2: The data is properly loaded from the sightings records onto the map screen using the lattitude and longitude.
